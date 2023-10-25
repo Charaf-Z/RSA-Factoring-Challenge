@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
 	{
 		mpz_set_str(number, line, 10);
 		if (factorize_to_primes(number, p, q))
-			gmp_printf("%Zd=%Zd*%Zd\n", number, p, q);
+			gmp_printf("%Zd=%Zd*%Zd\n", number, q, p);
 	}
 
 	if (line != NULL)

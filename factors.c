@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 			if (mpz_divisible_p(q, p) != 0)
 			{
 				mpz_cdiv_q(q, q, p);
-				gmp_printf("%Zd=%Zd*%Zd\n", number, p, q);
+				gmp_printf("%Zd=%Zd*%Zd\n", number, q, p);
 				break;
 			}
 			mpz_add_ui(p, p, 1);

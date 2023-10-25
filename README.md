@@ -14,7 +14,7 @@
   * one factorization per line
   * `p` and `q` don’t have to be prime numbers
 
-[rsc](./rsc) - RSA Laboratories states that: for each RSA number `n`, there exist prime numbers `p` and `q` such that\
+[rsa](./rsa.c) - RSA Laboratories states that: for each RSA number `n`, there exist prime numbers `p` and `q` such that\
  `n = p × q`. The problem is to find these two primes, given only `n`.
 
 * This task is the same as task 0, except:
