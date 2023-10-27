@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	{
 		number = atoll(line);
 		p = 2;
-		q = number;
+		q = number / 2;
 		while (p < q)
 		{
 			if (q % p == 0)
