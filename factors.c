@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t read;
-	long long number = 0, p = 0, q = 0;
+	mpz_t number, p, q, flag, next_flag;
 	FILE *file = fopen(argv[1], "r");
 
 	if (file == NULL)
@@ -28,24 +28,36 @@ int main(int argc, char *argv[])
 		printf("File not found!\n");
 		return (1);
 	}
+	mpz_inits(number, p, q, flag, next_flag, NULL);
 	while ((read = getline(&line, &len, file)) != -1)
 	{
-		number = atoll(line);
-		p = 2;
-		q = number / 2;
-		while (p < q)
+		mpz_set_str(number, line, 10);
+		mpz_set_ui(p, 2);
+		mpz_sqrt(flag, number);
+		mpz_set(q, number);
+		while (mpz_cmp(p, flag) <= 0)
 		{
-			if (q % p == 0)
+			mpz_sqrt(next_flag, flag);
+			if (mpz_divisible_p(q, p) != 0)
 			{
-				q /= p;
-				printf("%lld=%lld*%lld\n", number, q, p);
+				mpz_cdiv_q(q, q, p);
+				gmp_printf("%Zd=%Zd*%Zd\n", number, q, p);
 				break;
 			}
-			++p;
+			if (mpz_divisible_p(q, flag) != 0 && mpz_divisible_p(q, next_flag) == 0)
+			{
+				mpz_set(q, flag);
+				mpz_cdiv_q(p, number, flag);
+				gmp_printf("%Zd=%Zd*%Zd\n", number, q, p);
+				break;
+			}
+			mpz_add_ui(p, p, 1);
+			mpz_sub_ui(flag, flag, 1);
 		}
 	}
 	if (line != NULL)
 		free(line);
+	mpz_clears(number, p, q, flag, next_flag, NULL);
 	fclose(file);
 	return (0);
 }
