@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t read;
-	mpz_t number, p, q;
+	long number = 0, p = 0, q = 0;
 	FILE *file = fopen(argv[1], "r");
 
 	if (file == NULL)
@@ -28,27 +28,24 @@ int main(int argc, char *argv[])
 		printf("File not found!\n");
 		return (1);
 	}
-
-	mpz_inits(number, p, q, NULL);
 	while ((read = getline(&line, &len, file)) != -1)
 	{
-		mpz_set_str(number, line, 10);
-		mpz_set_ui(p, 2);
-		mpz_set(q, number);
-		while (mpz_cmp(p, q) < 0)
+		number = atoll(line);
+		p = 2;
+		q = number;
+		while (p < q)
 		{
-			if (mpz_divisible_p(q, p) != 0)
+			if (q % p == 0)
 			{
-				mpz_cdiv_q(q, q, p);
-				gmp_printf("%Zd=%Zd*%Zd\n", number, q, p);
+				q /= p;
+				printf("%ld=%ld*%ld\n", number, q, p);
 				break;
 			}
-			mpz_add_ui(p, p, 1);
+			++p;
 		}
 	}
 	if (line != NULL)
 		free(line);
-	mpz_clears(number, p, q, NULL);
 	fclose(file);
 	return (0);
 }
