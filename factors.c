@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 				if (mpz_divisible_p(q, __flag) != 0)
 				{
 					mpz_cdiv_q(q, q, __flag);
-					mpz_add(p, p, __flag);
+					mpz_add(p, p, flag);
 					gmp_printf("%Zd=%Zd*%Zd\n", number, q, p);
 					break;
 				}
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 				if (mpz_divisible_p(q, __flag) != 0)
 				{
 					mpz_cdiv_q(q, q, __flag);
-					mpz_sub(p, p, __flag);
+					mpz_sub(p, flag, p);
 					gmp_printf("%Zd=%Zd*%Zd\n", number, q, p);
 					break;
 				}
