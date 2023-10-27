@@ -35,8 +35,10 @@ int main(int argc, char *argv[])
 		mpz_set_ui(p, 2);
 		mpz_sqrt(flag, number);
 		mpz_set(q, number);
+		mpz_set_ui(next_flag, 0);
 		while (mpz_cmp(p, flag) <= 0)
 		{
+			mpz_add(next_flag, next_flag, flag);
 			mpz_sqrt(next_flag, flag);
 			if (mpz_divisible_p(q, p) != 0)
 			{
@@ -53,6 +55,7 @@ int main(int argc, char *argv[])
 			}
 			mpz_add_ui(p, p, 1);
 			mpz_sub_ui(flag, flag, 1);
+			mpz_add_ui(next_flag, next_flag, 1);
 		}
 	}
 	if (line != NULL)
