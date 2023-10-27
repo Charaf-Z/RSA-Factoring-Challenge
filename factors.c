@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t read;
-	long number = 0, p = 0, q = 0;
+	long long number = 0, p = 0, q = 0;
 	FILE *file = fopen(argv[1], "r");
 
 	if (file == NULL)
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 			if (q % p == 0)
 			{
 				q /= p;
-				printf("%ld=%ld*%ld\n", number, q, p);
+				printf("%lld=%lld*%lld\n", number, q, p);
 				break;
 			}
 			++p;
