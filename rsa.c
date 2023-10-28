@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <gmp.h>
 
@@ -9,26 +8,31 @@
  *
  * Return: true if the number is prime, false otherwise.
  */
-bool is_prime(mpz_t num)
+_Bool is_prime(mpz_t num)
 {
-	if (mpz_cmp_ui(num, 1) <= 0)
-		return (false);
+	mpz_t i, mul_i;
 
-	mpz_t sqrt_num;
-	mpz_t i;
-
-	mpz_init(sqrt_num);
-	mpz_sqrt(sqrt_num, num);
-	for (; mpz_cmp(i, sqrt_num) <= 0; mpz_add_ui(i, i, 1))
+	mpz_inits(i, mul_i, NULL);
+	mpz_set_ui(i, 3);
+	mpz_set(mul_i, i);
+	mpz_mul(mul_i, mul_i, mul_i);
+	if (mpz_divisible_ui_p(num, 2) != 0)
+	{
+		mpz_clears(i, mul_i, NULL);
+		return (0);
+	}
+	while (mpz_cmp(mul_i, num) <= 0)
 	{
 		if (mpz_divisible_p(num, i) != 0)
 		{
-			mpz_clear(sqrt_num);
-			return (false);
+			mpz_clears(i, mul_i, NULL);
+			return (0);
 		}
+		mpz_add_ui(i, i, 2);
+		mpz_mul(mul_i, mul_i, mul_i);
 	}
-	mpz_clear(sqrt_num);
-	return (true);
+	mpz_clears(i, mul_i, NULL);
+	return (1);
 }
 
 /**
@@ -39,42 +43,52 @@ bool is_prime(mpz_t num)
  *
  * Return: true if factorization is successful, false otherwise.
  */
-bool factorize_to_primes(mpz_t number, mpz_t p, mpz_t q)
+_Bool factorize_to_primes(mpz_t number, mpz_t p, mpz_t q)
 {
-	mpz_t temp;
-	mpz_t temp2;
+	mpz_t idx, sqrt_number;
+	mpz_inits(idx, sqrt_number, NULL);
 
-	mpz_init(temp);
-	mpz_init(temp2);
-
-	mpz_set_ui(p, 0);
-	mpz_set_ui(q, 0);
-
-	for (mpz_init_set_ui(temp, 2);
-			mpz_cmp(temp, number) <= 0;
-			mpz_add_ui(temp, temp, 1))
+	if (mpz_cmp_ui(number, 2) < 0)
 	{
-		if (is_prime(temp))
+		mpz_set_ui(p, 1);
+		mpz_set_ui(q, 1);
+		mpz_clears(idx, sqrt_number, NULL);
+		return 0;
+	}
+
+	mpz_sqrt(sqrt_number, number);
+
+	if (mpz_divisible_ui_p(number, 2) != 0)
+	{
+		mpz_cdiv_q_ui(q, number, 2);
+		mpz_set_ui(p, 2);
+		if (mpz_probab_prime_p(q, 25) && mpz_probab_prime_p(p, 25))
 		{
-			mpz_init_set(temp2, number);
-			mpz_fdiv_qr(q, temp2, temp2, temp);
-			if (mpz_cmp_ui(temp2, 0) == 0)
+			mpz_clears(idx, sqrt_number, NULL);
+			return 1;
+		}
+	} else {
+		mpz_set_ui(idx, 3);
+		while (mpz_cmp(idx, sqrt_number) <= 0)
+		{
+			if (mpz_divisible_p(number, idx) != 0)
 			{
-				mpz_set(p, temp);
-				if (is_prime(q))
+				mpz_cdiv_q(q, number, idx);
+				mpz_set(p, idx);
+				if (mpz_probab_prime_p(q, 25) && mpz_probab_prime_p(p, 25))
 				{
-					mpz_clear(temp);
-					mpz_clear(temp2);
-					return (true);
+					mpz_clears(idx, sqrt_number, NULL);
+					return (1);
 				}
 			}
-			mpz_clear(temp2);
+			mpz_add_ui(idx, idx, 2);
 		}
 	}
 
-	mpz_clear(temp);
-	return (false);
+	mpz_clears(idx, sqrt_number, NULL);
+	return (0);
 }
+
 
 /**
  * main - Entry point for the prime factorization program.

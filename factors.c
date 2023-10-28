@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 				{
 					mpz_cdiv_q(q, q, __flag);
 					mpz_add(p, p, flag);
-					gmp_printf("%Zd=%Zd*%Zd\n", number, q, p);
+					gmp_printf("%Zd=%Zd*%Zd\n", number, p, q);
 					break;
 				}
 				mpz_sub(__flag, flag, p);
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 				{
 					mpz_cdiv_q(q, q, __flag);
 					mpz_sub(p, flag, p);
-					gmp_printf("%Zd=%Zd*%Zd\n", number, q, p);
+					gmp_printf("%Zd=%Zd*%Zd\n", number, p, q);
 					break;
 				}
 			}
